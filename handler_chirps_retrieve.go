@@ -2,7 +2,7 @@ package main
 
 import "net/http"
 
-func (cfg *apiConfig) handlerRetrieveChrips(w http.ResponseWriter, r *http.Request) {
+func (cfg *apiConfig) handlerChirpsRetrieve(w http.ResponseWriter, r *http.Request) {
 	dbChrips, err := cfg.db.GetChrips(r.Context())
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Error Retrieving Chrips", err)
