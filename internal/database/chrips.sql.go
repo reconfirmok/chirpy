@@ -40,3 +40,37 @@ func (q *Queries) CreateChrip(ctx context.Context, arg CreateChripParams) (Chrip
 	)
 	return i, err
 }
+
+const getChrips = `-- name: GetChrips :many
+SELECT id, created_at, updated_at, body, user_id FROM chrips
+ORDER BY created_at ASC
+`
+
+func (q *Queries) GetChrips(ctx context.Context) ([]Chrip, error) {
+	rows, err := q.db.QueryContext(ctx, getChrips)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Chrip
+	for rows.Next() {
+		var i Chrip
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Body,
+			&i.UserID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

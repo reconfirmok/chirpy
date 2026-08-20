@@ -8,3 +8,7 @@ VALUES (
     $2
 )
 RETURNING *;
+
+-- name: GetChrips :many
+SELECT * FROM chrips
+ORDER BY created_at ASC;

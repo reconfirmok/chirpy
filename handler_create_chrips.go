@@ -13,8 +13,8 @@ import (
 
 type Chirp struct {
 	ID        uuid.UUID `json:"id"`
-	CreatedAT time.Time `json:"created_at"`
-	UpdatedAT time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 	Body      string    `json:"body"`
 	UserID    uuid.UUID `json:"user_id"`
 }
@@ -50,8 +50,8 @@ func (cfg *apiConfig) handlerCreateChrips(w http.ResponseWriter, r *http.Request
 
 	respondWithJSON(w, http.StatusCreated, Chirp{
 		ID:        chrip.ID,
-		CreatedAT: chrip.CreatedAt,
-		UpdatedAT: chrip.UpdatedAt,
+		CreatedAt: chrip.CreatedAt,
+		UpdatedAt: chrip.UpdatedAt,
 		Body:      chrip.Body,
 		UserID:    chrip.UserID,
 	})
