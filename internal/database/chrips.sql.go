@@ -12,7 +12,7 @@ import (
 )
 
 const createChrip = `-- name: CreateChrip :one
-INSERT INTO chrips (id, created_at, updated_at, body, user_id)
+INSERT INTO chirps (id, created_at, updated_at, body, user_id)
 VALUES (
     gen_random_uuid(),
     NOW(),
@@ -28,9 +28,9 @@ type CreateChripParams struct {
 	UserID uuid.UUID
 }
 
-func (q *Queries) CreateChrip(ctx context.Context, arg CreateChripParams) (Chrip, error) {
+func (q *Queries) CreateChrip(ctx context.Context, arg CreateChripParams) (Chirp, error) {
 	row := q.db.QueryRowContext(ctx, createChrip, arg.Body, arg.UserID)
-	var i Chrip
+	var i Chirp
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
@@ -41,20 +41,38 @@ func (q *Queries) CreateChrip(ctx context.Context, arg CreateChripParams) (Chrip
 	return i, err
 }
 
-const getChrips = `-- name: GetChrips :many
-SELECT id, created_at, updated_at, body, user_id FROM chrips
+const getChirp = `-- name: GetChirp :one
+SELECT id, created_at, updated_at, body, user_id FROM chirps
+WHERE id = $1
+`
+
+func (q *Queries) GetChirp(ctx context.Context, id uuid.UUID) (Chirp, error) {
+	row := q.db.QueryRowContext(ctx, getChirp, id)
+	var i Chirp
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Body,
+		&i.UserID,
+	)
+	return i, err
+}
+
+const getchirps = `-- name: Getchirps :many
+SELECT id, created_at, updated_at, body, user_id FROM chirps
 ORDER BY created_at ASC
 `
 
-func (q *Queries) GetChrips(ctx context.Context) ([]Chrip, error) {
-	rows, err := q.db.QueryContext(ctx, getChrips)
+func (q *Queries) Getchirps(ctx context.Context) ([]Chirp, error) {
+	rows, err := q.db.QueryContext(ctx, getchirps)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Chrip
+	var items []Chirp
 	for rows.Next() {
-		var i Chrip
+		var i Chirp
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,

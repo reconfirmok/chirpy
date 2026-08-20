@@ -3,7 +3,7 @@ package main
 import "net/http"
 
 func (cfg *apiConfig) handlerChirpsRetrieve(w http.ResponseWriter, r *http.Request) {
-	dbChrips, err := cfg.db.GetChrips(r.Context())
+	dbChrips, err := cfg.db.Getchirps(r.Context())
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Error Retrieving Chrips", err)
 		return
