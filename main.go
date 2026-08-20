@@ -52,9 +52,10 @@ func main() {
 	mux.Handle("/api/", http.StripPrefix("/api", http.FileServer(http.Dir(filepathRoot))))
 
 	mux.HandleFunc("GET /api/healthz", handlerReadiness)
-	mux.HandleFunc("POST /api/validate_chirp", handlerValidate)
 
 	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
+
+	mux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChrips)
 
 	mux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
 	mux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
